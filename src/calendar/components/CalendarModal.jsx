@@ -27,8 +27,7 @@ const customStyles = {
   export const CalendarModal = () => {
 
     //Estado desde customHook
-    const { isDateModalOpen } = useUiStore();
-    const { closeDateModal } = useUiStore();
+    const { isDateModalOpen, closeDateModal } = useUiStore();
     
 
     //Nuevo estado para cuando se ingrese el evento
