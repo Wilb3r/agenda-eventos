@@ -1,12 +1,11 @@
 import Modal from 'react-modal';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { addHours, differenceInSeconds } from 'date-fns';
 import Datepicker, { registerLocale } from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { es } from 'date-fns/locale/es';
 import Swal from 'sweetalert2';
-import { useMemo } from 'react';
-import { useUiStore } from '../../hooks';
+import { useCalendarStore, useUiStore } from '../../hooks';
 
 registerLocale( 'es', es);
 
@@ -28,7 +27,8 @@ const customStyles = {
 
     //Estado desde customHook
     const { isDateModalOpen, closeDateModal } = useUiStore();
-    
+
+    const { activeEvent } = useCalendarStore();
 
     //Nuevo estado para cuando se ingrese el evento
      const [ formSubmitted, setFormSubmitted] = useState(false);
@@ -49,6 +49,12 @@ const customStyles = {
         : 'is-invalid'
 
      }, [ formValues.title, formSubmitted ])
+
+     useEffect ( () => {
+      if ( activeEvent !== null ){
+        setFormValues({ ...activeEvent })
+      }
+     }, [ activeEvent ] );
 
      const onInputChanged = ({ target }) => {
       setFormValues({

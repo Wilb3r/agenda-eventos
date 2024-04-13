@@ -5,7 +5,6 @@ import { CalendarEvent, CalendarModal, Navbar } from "../";
 import { useState } from "react";
 import { useCalendarStore, useUiStore } from "../../hooks";
 
-
 export const CalendarPage = () => {
 
     const { openDateModal } = useUiStore();
@@ -34,7 +33,7 @@ export const CalendarPage = () => {
 
     const onSelect = (event) => {
         //console.log({ click: event })
-        setActiveEvent();
+        setActiveEvent( event );
     }
 
     const onViewChange = (event) => {
