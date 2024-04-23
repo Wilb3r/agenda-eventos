@@ -28,14 +28,15 @@ const customStyles = {
     //Estado desde customHook
     const { isDateModalOpen, closeDateModal } = useUiStore();
 
-    const { activeEvent } = useCalendarStore();
+    //Extraer la funcion que inicia el proceso de grabacion
+    const { activeEvent, startSavingEvent } = useCalendarStore();
 
     //Nuevo estado para cuando se ingrese el evento
-     const [ formSubmitted, setFormSubmitted] = useState(false);
+    const [ formSubmitted, setFormSubmitted] = useState(false);
 
-     const [ formValues, setFormValues ] = useState({
-      title: 'Titulo del evento',
-      notes: 'Descripción del evento',
+    const [ formValues, setFormValues ] = useState({
+      title: '',
+      notes: '',
       start: new Date(),
       end: addHours ( new Date(), 2)
      });
@@ -76,28 +77,33 @@ const customStyles = {
       closeDateModal();
      }
 
-      const onSubmit = (event) => {
-        event.preventDefault();
-        setFormSubmitted(true);
+    const onSubmit = async(event) => {
+      event.preventDefault();
+      setFormSubmitted(true);
 
-        const difference = differenceInSeconds( formValues.end, formValues.start );
-        console.log({ difference });
+    const difference = differenceInSeconds( formValues.end, formValues.start );
+    console.log({ difference });
 
-        if (isNaN( difference ) || difference <= 0 ){
-          Swal.fire('Fechas Incorrects', 'Por favor revisa las fechas ingresadas', 'error');
+    if (isNaN( difference ) || difference <= 0 ){
+     Swal.fire('Fechas Incorrects', 'Por favor revisa las fechas ingresadas', 'error');
           return;
-        }
+       }
 
-        if (formValues.title.length <=0 ){
+      if (formValues.title.length <=0 ){
           console.log('Es necesario indicar un titulo al evento')
           return;
         }
-        if (formValues.notes.length <=0 ){
+      if (formValues.notes.length <=0 ){
           console.log('Es necesario indicar una nota al evento')
-          alert('Nota');
           return;
         }
         console.log(formValues);
+        
+        await startSavingEvent( formValues );
+
+        closeDateModal();
+
+        setFormSubmitted(false);
       }
      
     return (
